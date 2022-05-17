@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="NewmdbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Actor">
+          <Key>
+            <PropertyRef Name="aName" />
+          </Key>
+          <Property Name="aID" Type="int" Nullable="false" />
+          <Property Name="aName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ActedM" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Movie">
+          <Key>
+            <PropertyRef Name="Moviename" />
+          </Key>
+          <Property Name="Moviename" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="MID" Type="int" Nullable="false" />
+          <Property Name="MActor" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="MProducer" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Producer">
+          <Key>
+            <PropertyRef Name="pName" />
+          </Key>
+          <Property Name="pID" Type="int" Nullable="false" />
+          <Property Name="pName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="producedM" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Actor_Movie">
+          <End Role="Movie" Type="Self.Movie" Multiplicity="1" />
+          <End Role="Actor" Type="Self.Actor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movie">
+              <PropertyRef Name="Moviename" />
+            </Principal>
+            <Dependent Role="Actor">
+              <PropertyRef Name="ActedM" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Movie_Actor">
+          <End Role="Actor" Type="Self.Actor" Multiplicity="1" />
+          <End Role="Movie" Type="Self.Movie" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actor">
+              <PropertyRef Name="aName" />
+            </Principal>
+            <Dependent Role="Movie">
+              <PropertyRef Name="MActor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="NewmdbModelStoreContainer">
+          <EntitySet Name="Actor" EntityType="Self.Actor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Movie" EntityType="Self.Movie" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Producer" EntityType="Self.Producer" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Actor_Movie" Association="Self.FK_Actor_Movie">
+            <End Role="Movie" EntitySet="Movie" />
+            <End Role="Actor" EntitySet="Actor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Movie_Actor" Association="Self.FK_Movie_Actor">
+            <End Role="Actor" EntitySet="Actor" />
+            <End Role="Movie" EntitySet="Movie" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="NewmdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Actor">
+          <Key>
+            <PropertyRef Name="aName" />
+          </Key>
+          <Property Name="aID" Type="Int32" Nullable="false" />
+          <Property Name="aName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ActedM" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Actor1" Relationship="Self.FK_Actor_Actor" FromRole="Actor" ToRole="Actor1" />
+          <NavigationProperty Name="Actor2" Relationship="Self.FK_Actor_Actor" FromRole="Actor1" ToRole="Actor" />
+          <NavigationProperty Name="Movie" Relationship="Self.FK_Actor_Movie" FromRole="Actor" ToRole="Movie" />
+          <NavigationProperty Name="Movies" Relationship="Self.FK_Movie_Actor" FromRole="Actor" ToRole="Movie" />
+        </EntityType>
+        <EntityType Name="Movie">
+          <Key>
+            <PropertyRef Name="Moviename" />
+          </Key>
+          <Property Name="Moviename" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MID" Type="Int32" Nullable="false" />
+          <Property Name="MActor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MProducer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Actors" Relationship="Self.FK_Actor_Movie" FromRole="Movie" ToRole="Actor" />
+          <NavigationProperty Name="Actor" Relationship="Self.FK_Movie_Actor" FromRole="Movie" ToRole="Actor" />
+          <NavigationProperty Name="Producer" Relationship="Self.FK_Movie_Producer" FromRole="Movie" ToRole="Producer" />
+        </EntityType>
+        <EntityType Name="Producer">
+          <Key>
+            <PropertyRef Name="pName" />
+          </Key>
+          <Property Name="pID" Type="Int32" Nullable="false" />
+          <Property Name="pName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="producedM" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Movies" Relationship="Self.FK_Movie_Producer" FromRole="Producer" ToRole="Movie" />
+        </EntityType>
+        <Association Name="FK_Actor_Actor">
+          <End Role="Actor" Type="Self.Actor" Multiplicity="1" />
+          <End Role="Actor1" Type="Self.Actor" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Actor">
+              <PropertyRef Name="aName" />
+            </Principal>
+            <Dependent Role="Actor1">
+              <PropertyRef Name="aName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Actor_Movie">
+          <End Role="Movie" Type="Self.Movie" Multiplicity="1" />
+          <End Role="Actor" Type="Self.Actor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movie">
+              <PropertyRef Name="Moviename" />
+            </Principal>
+            <Dependent Role="Actor">
+              <PropertyRef Name="ActedM" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Movie_Actor">
+          <End Role="Actor" Type="Self.Actor" Multiplicity="1" />
+          <End Role="Movie" Type="Self.Movie" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actor">
+              <PropertyRef Name="aName" />
+            </Principal>
+            <Dependent Role="Movie">
+              <PropertyRef Name="MActor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Movie_Producer">
+          <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
+          <End Role="Movie" Type="Self.Movie" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producer">
+              <PropertyRef Name="pName" />
+            </Principal>
+            <Dependent Role="Movie">
+              <PropertyRef Name="MProducer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="NewmdbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Actors" EntityType="Self.Actor" />
+          <EntitySet Name="Movies" EntityType="Self.Movie" />
+          <EntitySet Name="Producers" EntityType="Self.Producer" />
+          <AssociationSet Name="FK_Actor_Actor" Association="Self.FK_Actor_Actor">
+            <End Role="Actor" EntitySet="Actors" />
+            <End Role="Actor1" EntitySet="Actors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Actor_Movie" Association="Self.FK_Actor_Movie">
+            <End Role="Movie" EntitySet="Movies" />
+            <End Role="Actor" EntitySet="Actors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Movie_Actor" Association="Self.FK_Movie_Actor">
+            <End Role="Actor" EntitySet="Actors" />
+            <End Role="Movie" EntitySet="Movies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Movie_Producer" Association="Self.FK_Movie_Producer">
+            <End Role="Producer" EntitySet="Producers" />
+            <End Role="Movie" EntitySet="Movies" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="NewmdbModelStoreContainer" CdmEntityContainer="NewmdbEntities">
+          <EntitySetMapping Name="Actors">
+            <EntityTypeMapping TypeName="NewmdbModel.Actor">
+              <MappingFragment StoreEntitySet="Actor">
+                <ScalarProperty Name="aID" ColumnName="aID" />
+                <ScalarProperty Name="aName" ColumnName="aName" />
+                <ScalarProperty Name="ActedM" ColumnName="ActedM" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Movies">
+            <EntityTypeMapping TypeName="NewmdbModel.Movie">
+              <MappingFragment StoreEntitySet="Movie">
+                <ScalarProperty Name="Moviename" ColumnName="Moviename" />
+                <ScalarProperty Name="MID" ColumnName="MID" />
+                <ScalarProperty Name="MActor" ColumnName="MActor" />
+                <ScalarProperty Name="MProducer" ColumnName="MProducer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Producers">
+            <EntityTypeMapping TypeName="NewmdbModel.Producer">
+              <MappingFragment StoreEntitySet="Producer">
+                <ScalarProperty Name="pID" ColumnName="pID" />
+                <ScalarProperty Name="pName" ColumnName="pName" />
+                <ScalarProperty Name="producedM" ColumnName="producedM" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
